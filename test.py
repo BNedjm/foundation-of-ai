@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib as mpl
 
 def heatmap(data, ax=None, cbar_kw=None, cbarlabel="", **kwargs):
     """
@@ -60,7 +59,7 @@ def heatmap(data, ax=None, cbar_kw=None, cbarlabel="", **kwargs):
 
     return im, cbar
 
-harvest = np.array([[0.8, 2.4, 2.5, 3.9, 0.0, 4.0, 0.0],
+data = np.array([[0.8, 2.4, 2.5, 3.9, 0.0, 4.0, 0.0],
                     [2.4, 0.0, 4.0, 1.0, 2.7, 0.0, 0.0],
                     [1.1, 2.4, 0.8, 4.3, 1.9, 4.4, 0.0],
                     [0.6, 0.0, 0.3, 0.0, 3.1, 0.0, 0.0],
@@ -70,7 +69,7 @@ harvest = np.array([[0.8, 2.4, 2.5, 3.9, 0.0, 4.0, 0.0],
 
 fig, ax = plt.subplots()
 
-im, cbar = heatmap(harvest, ax=ax, cmap="plasma", cbarlabel="cost")
+im, cbar = heatmap(data, ax=ax, cmap="plasma", cbarlabel="cost")
 
 fig.tight_layout()
 plt.show()
