@@ -1,64 +1,7 @@
+from PIL import Image, ImageDraw, ImageFont
 import matplotlib.pyplot as plt
 import numpy as np
 import random
-
-def heatmap(data, ax=None, cbar_kw=None, cbarlabel="", **kwargs):
-    """
-    Create a heatmap from a numpy array and two lists of labels.
-
-    Parameters
-    ----------
-    data
-        A 2D numpy array of shape (M, N).
-    row_labels
-        A list or array of length M with the labels for the rows.
-    col_labels
-        A list or array of length N with the labels for the columns.
-    ax
-        A `matplotlib.axes.Axes` instance to which the heatmap is plotted.  If
-        not provided, use current axes or create a new one.  Optional.
-    cbar_kw
-        A dictionary with arguments to `matplotlib.Figure.colorbar`.  Optional.
-    cbarlabel
-        The label for the colorbar.  Optional.
-    **kwargs
-        All other arguments are forwarded to `imshow`.
-    """
-
-    if ax is None:
-        ax = plt.gca()
-
-    if cbar_kw is None:
-        cbar_kw = {}
-
-    # Plot the heatmap
-    im = ax.imshow(data, **kwargs)
-
-    # Create colorbar
-    cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
-    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
-
-    # Show all ticks and label them with the respective list entries.
-    # ax.set_xticks(np.arange(data.shape[1]), labels=col_labels)
-    # ax.set_yticks(np.arange(data.shape[0]), labels=row_labels)
-
-    # Let the horizontal axes labeling appear on top.
-    # ax.tick_params(top=True, bottom=False,
-    #                labeltop=True, labelbottom=False)
-
-    # Rotate the tick labels and set their alignment.
-    # plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
-    #          rotation_mode="anchor")
-
-    # Turn spines off and create white grid.
-    ax.spines[:].set_visible(False)
-
-    ax.set_xticks(np.arange(data.shape[1]+1)-.5, minor=True)
-    ax.set_yticks(np.arange(data.shape[0]+1)-.5, minor=True)
-    ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
-    ax.tick_params(which="minor", bottom=False, left=True)
-
-    return im, cbar
 
 class Space():
 
@@ -103,7 +46,7 @@ class Space():
             print("Initial state: cost", self.get_cost(self.hospitals))
         if image_prefix:
             self.output_image(f"{image_prefix}{str(count).zfill(3)}.png")
-            
+            self.output_heatmap()
         # Continue until we reach maximum number of iterations
         while maximum is None or count < maximum:
             count += 1
@@ -194,7 +137,6 @@ class Space():
 
     def output_image(self, filename):
         """Generates image with all houses and hospitals."""
-        from PIL import Image, ImageDraw, ImageFont
         cell_size = 100
         cell_border = 2
         cost_size = 40
@@ -257,7 +199,7 @@ class Space():
             for col in range(self.width)
         )
 
-        candidates_data = np.empty(shape=(self.height, self.width))
+        candidates_data = np.zeros(shape=(self.height, self.width))
 
         # Remove all houses and hospitals
         for house in self.houses:
@@ -267,16 +209,28 @@ class Space():
         
         for candidate in candidates:
             candidates_data[candidate[0]][candidate[1]] = self.get_cost(set([candidate]))
-
+        
         return candidates_data
     
     def output_heatmap(self):
         """Generates heatmap of hospital cost."""
         data = self.get_heatmap_data(self.hospitals)
+
         fig, ax = plt.subplots()
-        im, cbar = heatmap(data, ax=ax, cmap="plasma", cbarlabel="cost")
+        ax = plt.gca()
+
+        # Set title
+        ax.set_title("Hospital Cost Heatmap")
+
+        # Plot the heatmap
+        im = ax.imshow(data, cmap="plasma")
+
+        # Create colorbar
+        cbar = ax.figure.colorbar(im, ax=ax, location="bottom", orientation="horizontal")
+
         fig.tight_layout()
-        plt.show()
+        # plt.show()
+        plt.savefig("heatmap.png")
 
 
 # Create a new space and add houses randomly
@@ -286,5 +240,4 @@ for i in range(15):
 
 # Use local search to determine hospital placement
 hospitals = s.hill_climb(image_prefix="hospitals", log=True, maximum=10)
-s.output_heatmap()
 

@@ -50,22 +50,18 @@ def heatmap(data, ax=None, cbar_kw=None, cbarlabel="", **kwargs):
     #          rotation_mode="anchor")
 
     # Turn spines off and create white grid.
-    ax.spines[:].set_visible(False)
+    # ax.spines[:].set_visible(False)
 
-    ax.set_xticks(np.arange(data.shape[1]+1)-.5, minor=True)
-    ax.set_yticks(np.arange(data.shape[0]+1)-.5, minor=True)
+    ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]-.5, minor=True)
+    # ax.set_yticks(np.arange(data.shape[0]+1)-.5, minor=True)
     ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
 
     return im, cbar
 
-data = np.array([[0.8, 2.4, 2.5, 3.9, 0.0, 4.0, 0.0],
-                    [2.4, 0.0, 4.0, 1.0, 2.7, 0.0, 0.0],
-                    [1.1, 2.4, 0.8, 4.3, 1.9, 4.4, 0.0],
-                    [0.6, 0.0, 0.3, 0.0, 3.1, 0.0, 0.0],
-                    [0.7, 1.7, 0.6, 2.6, 2.2, 6.2, 0.0],
-                    [1.3, 1.2, 0.0, 0.0, 0.0, 3.2, 5.1],
-                    [0.1, 2.0, 0.0, 1.4, 0.0, 1.9, 6.3]])
+data = np.array([
+    [238, 225, 212, 201, 190, 179, 168, 159, 150, 0, 138, 139, 142, 0, 152, 163, 174, 185, 196, 209],
+    [227, 214, 201, 190, 179, 168, 157, 148, 139, 130, 127, 128, 131, 134, 141, 152, 163, 174, 185, 198]])
 
 fig, ax = plt.subplots()
 
