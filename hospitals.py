@@ -239,5 +239,5 @@ for i in range(15):
     s.add_house(random.randrange(s.height), random.randrange(s.width))
 
 # Use local search to determine hospital placement
-hospitals = s.hill_climb(image_prefix="hospitals", log=True, maximum=10)
+hospitals = s.hill_climb(image_prefix="hospitals", log=True)
 
