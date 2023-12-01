@@ -193,24 +193,24 @@ class Space():
     def get_heatmap_data(self, hospitals):
         """Generates heatmap hospital cost data."""
         # Consider all possible cells
-        candidates = set(
+        empty_cells = set(
             (row, col)
             for row in range(self.height)
             for col in range(self.width)
         )
 
-        candidates_data = np.zeros(shape=(self.height, self.width))
+        data = np.zeros(shape=(self.height, self.width))
 
-        # Remove all houses and hospitals
+        # Remove all houses ## and hospitals
         for house in self.houses:
-            candidates.remove(house)
+            empty_cells.remove(house)
         # for hospital in self.hospitals:
         #     candidates.remove(hospital)
         
-        for candidate in candidates:
-            candidates_data[candidate[0]][candidate[1]] = self.get_cost(set([candidate]))
+        for cell in empty_cells:
+            data[cell[0]][cell[1]] = self.get_cost(set([cell]))
         
-        return candidates_data
+        return data
     
     def output_heatmap(self):
         """Generates heatmap of hospital cost."""
@@ -219,8 +219,18 @@ class Space():
         fig, ax = plt.subplots()
         ax = plt.gca()
 
+        # creating the font properties
+        font = {
+            "family": "sans-serif",
+            "color": "black",
+            "size": 14
+            }
+
         # Set title
-        ax.set_title("Hospital Cost Heatmap")
+        ax.set_title("Hospital Cost Heatmap", fontdict=font)
+        # Set the ticks and ticklabels for all axes
+        ax.set_xticks(ticks=np.arange(0, self.width, 1), labels=np.arange(1, self.width+1, 1))
+        ax.set_yticks(ticks=np.arange(0, self.height, 1), labels=np.arange(1, self.height+1, 1))
 
         # Plot the heatmap
         im = ax.imshow(data, cmap="plasma")
