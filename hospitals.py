@@ -188,7 +188,7 @@ class Space():
             font=font
         )
 
-        img.save(filename)
+        img.save(f"./output/{filename}")
     
     def get_heatmap_data(self, hospitals):
         """Generates heatmap hospital cost data."""
@@ -240,7 +240,7 @@ class Space():
 
         fig.tight_layout()
         # plt.show()
-        plt.savefig("heatmap.png")
+        plt.savefig("./output/heatmap.png")
 
 
 # Create a new space and add houses randomly
