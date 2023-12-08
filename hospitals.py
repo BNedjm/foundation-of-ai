@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 import random
 
@@ -214,10 +215,28 @@ class Space():
     
     def output_heatmap(self):
         """Generates heatmap of hospital cost."""
-        data = self.get_heatmap_data(self.hospitals)
+        heat = self.get_heatmap_data(self.hospitals)
 
-        fig, ax = plt.subplots()
-        ax = plt.gca()
+        fig, ax = plt.subplots(figsize=(20,10))
+        plt.tick_params(bottom='on')
+        ax = sns.heatmap(heat, 
+                         cmap=sns.color_palette("inferno", 20),
+                         cbar=True, 
+                         cbar_kws={"location": "bottom", "orientation": "horizontal"},
+                         linecolor="white",
+                         linewidths=.5,
+                         square=True)
+        
+        # ax2 = plt.twinx()
+        # sns.lineplot(data=progress, linewidth=5, ax=ax)
+
+        # for hospital in self.hospitals:
+        #     ax.annotate("",
+        #         xy=(hospital[1]+2, hospital[0]+2),
+        #         xytext=(hospital[1], hospital[0]),
+        #         arrowprops=dict(arrowstyle="->",
+        #                         connectionstyle="angle"),
+        #         )
 
         # creating the font properties
         font = {
@@ -225,20 +244,12 @@ class Space():
             "color": "black",
             "size": 14
             }
-
+        
+        # Axis parameters
+        ax.axis('tight')
         # Set title
         ax.set_title("Hospital Cost Heatmap", fontdict=font)
-        # Set the ticks and ticklabels for all axes
-        ax.set_xticks(ticks=np.arange(0, self.width, 1), labels=np.arange(1, self.width+1, 1))
-        ax.set_yticks(ticks=np.arange(0, self.height, 1), labels=np.arange(1, self.height+1, 1))
 
-        # Plot the heatmap
-        im = ax.imshow(data, cmap="plasma")
-
-        # Create colorbar
-        cbar = ax.figure.colorbar(im, ax=ax, location="bottom", orientation="horizontal")
-
-        fig.tight_layout()
         # plt.show()
         plt.savefig("./output/heatmap.png")
 
